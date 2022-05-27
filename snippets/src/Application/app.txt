@@ -1,0 +1,5 @@
+{% if global_inputs.framework == 'net5.0' %} 
+app.UseGrpc(environment, Assembly.GetEntryAssembly(), Path.Combine(Directory.GetParent(environment.ContentRootPath).FullName, "Protos"));
+{% else %}
+app.UseGrpc(environment, Assembly.GetEntryAssembly(), Path.Combine(Directory.GetParent(environment.ContentRootPath).Parent.FullName,"Protos"));
+{% endif %}

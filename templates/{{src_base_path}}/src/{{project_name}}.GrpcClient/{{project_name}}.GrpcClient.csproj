@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>{{framework}}</TargetFrameworks>
+    <IsPackable>true</IsPackable>
+    <NuspecProperties>version=$(Version)</NuspecProperties>
+    <PackageVersion>1.0.0</PackageVersion>
+    <PackageId>{{project_name}}.GrpcClient</PackageId>
+    <Description>Este componente foi projetado para padronizar a configuração do client gRPC da aplicação {{project_name}}.{{project_type}}.</Description>
+    <Protobuf_TouchMissingExpected>true</Protobuf_TouchMissingExpected>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.19.1" />
+    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.40.0" />
+    <PackageReference Include="Grpc.Reflection" Version="2.41.1" />
+    <PackageReference Include="Grpc.Tools" Version="2.41.1">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="../Protos/*.proto" Visible="false" GrpcServices="None" CompileOutputs="false" OutputDir="%(RelativePath)Base" />
+    <Protobuf Update="../Protos/*.proto" Visible="false" GrpcServices="Client" CompileOutputs="false" OutputDir="%(RelativePath)Base" />
+  </ItemGroup> 
+
+  <ItemGroup>
+    <None Remove="Base\.gitkeep" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Base\" />
+  </ItemGroup>   
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>{{project_name}}.GrpcClient.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+</Project>

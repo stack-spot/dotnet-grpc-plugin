@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <Protobuf Include="../Protos/*.proto" Visible="false" GrpcServices="None" CompileOutputs="false" OutputDir="%(RelativePath)Base"/>
+    <Protobuf Update="../Protos/*.proto" Visible="false" GrpcServices="Server" CompileOutputs="false" OutputDir="%(RelativePath)Base" />
+  </ItemGroup>

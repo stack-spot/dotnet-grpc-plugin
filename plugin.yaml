@@ -1,0 +1,166 @@
+name: dotnet-grpc-app-plugin
+description: Plugin para habilitar gRPC em seu projeto.
+types:
+  - app
+inputs:
+- label: gRPC Port
+  type: int
+  name: grpc_port
+  default: 50051
+
+computed-inputs: 
+  file: "{% if global_inputs.framework == 'net6.0' %}{{'Program.cs'}}{% else %}{{'Startup.cs'}}{% endif %}"
+  base_path: "{% if global_computed_inputs.src_base_path is defined and global_computed_inputs.src_base_path != '' %}{{global_computed_inputs.src_base_path}}{% else %}{{'.'}}{% endif %}"
+
+hooks:
+#package
+  - type: run
+    trigger: before-render
+    working-dir: "{{computed_inputs.base_path}}/src/{{project_name}}.Application"
+    commands:
+      - dotnet add package StackSpot.Grpc
+      - dotnet add package Grpc.AspNetCore
+  - type: run
+    trigger: before-render
+    working-dir: "{{computed_inputs.base_path}}/src/{{project_name}}.{{project_type}}"
+    commands:
+      - dotnet add package StackSpot.Grpc
+      - dotnet add package Grpc.AspNetCore
+#dependencyinjection
+  - type: edit
+    trigger: before-render
+    path: "{{computed_inputs.base_path}}/src/{{project_name}}.Application/Common/StackSpot/DependencyInjection.cs"
+    changes:
+      - search:
+          string: "using"
+          insert-before:
+            value: "using StackSpot.Grpc;"
+          when:
+            not-exists: "using StackSpot.Grpc;"      
+      - search:
+          string: "using"
+          insert-before:
+            value: "using System.IO; "
+          when:
+            not-exists: "using System.IO;"           
+      - search:
+          string: "return services"
+          insert-before:
+            snippet: snippets/src/Application/services.txt
+          when:
+            not-exists: "services.AddGrpcServer();"
+      - search:
+          string: "using"
+          insert-before:
+            value: using StackSpot.Grpc;
+          when:
+            not-exists: "using StackSpot.Grpc;"
+      - search:
+          string: "using"
+          insert-before:
+            value: "using System.Reflection;"
+          when:
+            not-exists: "using System.Reflection"
+      - search:
+          string: "return app"
+          insert-before:
+            snippet: snippets/src/Application/app.txt
+          when:
+            not-exists: "app.UseGrpc"
+#program
+  - type: edit
+    trigger: before-render
+    path: "{{computed_inputs.base_path}}/src/{{project_name}}.{{project_type}}/Program.cs"
+    changes:
+      - search:
+          string: "using"
+          insert-before:
+            value: using System.Net;
+          when:
+            not-exists: "using System.Net;"
+      - search:
+          string: "using"
+          insert-before:
+            value: using Microsoft.AspNetCore.Server.Kestrel.Core;
+          when:
+            not-exists: "using Microsoft.AspNetCore.Server.Kestrel.Core;"
+      - search:
+          pattern: \.UseStartup
+          replace-by:
+            snippet: snippets/src/{{project_type}}/configurekestrel.txt
+          when:
+            not-exists: "ConfigureKestrel"    
+      - search:
+          string: "builder.Services.AddStackSpot"
+          insert-after:
+            snippet: snippets/src/{{project_type}}/configurekestrel.txt
+          when:
+            not-exists: "ConfigureKestrel"                    
+      - search:
+          pattern: \.ConfigureKestrel\.?\(\w+\s*\=\>\s*\{
+          insert-after:
+            snippet: snippets/src/{{project_type}}/options.txt
+          when:
+            not-exists: "listenOptions.Protocols = HttpProtocols.Http2;"
+#docker
+  - type: edit
+    trigger: before-render
+    path: "{{computed_inputs.base_path}}/src/{{project_name}}.{{project_type}}/Dockerfile"
+    changes:
+      - search:
+          string: "EXPOSE"
+          insert-after:
+            value: "EXPOSE {{grpc_port}}\n"
+          when:
+            not-exists: "EXPOSE {{grpc_port}}"     
+  - type: edit
+    trigger: before-render
+    path: "docker-compose.yml"
+    changes:
+      - search:
+          string: "ports:"
+          insert-after:
+            value: "      - \"{{grpc_port}}:{{grpc_port}}\"\n"
+          when:
+            not-exists: "- {{grpc_port}}:{{grpc_port}}"
+#format
+  - type: run
+    trigger: after-render
+    working-dir: "{{computed_inputs.base_path}}/src/{{project_name}}.Application"
+    commands:
+      -  dotnet dotnet-format --include-generated --include Common/StackSpot/DependencyInjection.cs
+  - type: run
+    trigger: after-render
+    working-dir: "{{computed_inputs.base_path}}/src/{{project_name}}.{{project_type}}"
+    commands:
+      -  dotnet dotnet-format --include-generated --include Program.cs
+#solution
+  - type: run
+    trigger: after-render
+    commands:
+      - dotnet sln add {{computed_inputs.base_path}}/src/{{project_name}}.GrpcClient/{{project_name}}.GrpcClient.csproj
+      - dotnet sln add {{computed_inputs.base_path}}/tests/{{project_name}}.GrpcClientTests/{{project_name}}.GrpcClient.UnitTests.csproj
+      - dotnet build {{computed_inputs.base_path}}/{{project_name}}.{{project_type}}.sln
+
+displayName: gRPC
+
+picture: "plugin.png"
+
+category: Backend, gRPC
+
+compatibility:
+  - net5.0
+  - net6.0
+
+about: docs/about.md
+
+usage: docs/usage.md
+
+useCase: docs/use-case.md
+
+implementation: docs/implementation.md
+
+technologies: 
+  - .NET
+  - C#
+  - GRPC

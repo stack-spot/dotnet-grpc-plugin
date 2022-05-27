@@ -1,17 +1,3 @@
-
-## **Visão Geral**
-O plugin **dotnet-gprc-app-plugin** adiciona em uma Stack a capacidade de expor serviços `gRPC` e suas configurações, além de prover a criação de um `gRPC Client` que permite a distribuição e consumo deste serviço em outras aplicações.
-
-## **Uso**
-
-### **Pré-requisitos**
-Para utilizar esse plugin é necessário ter uma stack dotnet criada pelo `CLI` do `StackSpot` que você pode baixar [**aqui**](https://stackspot.com/).
-
-Também ter instalado:  
-- .NET 5 ou 6 
-- O template `dotnet-api-template` deverá estar aplicado para que você consiga utilizar este plugin.
-
-## **Configuração**
 #### **Inputs**
 
 Os inputs necessários para utilizar o plugin são:
@@ -152,6 +138,3 @@ Elas irão lançar requisições para o seu endpoint **gRPC**. O projeto vem pr�
 #### **Ambiente local**
 
 Também como configuração adicional, a porta para o serviço gRPC informada nos `Inputs` foi exposta nos arquivos `Dockerfile`e `docker-compose.yml`.
-
-### **Implementação**
-- [**Nuget**](https://www.nuget.org/packages/StackSpot.Grpc/).
