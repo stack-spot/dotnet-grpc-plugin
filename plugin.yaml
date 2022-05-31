@@ -1,4 +1,4 @@
-name: dotnet-grpc-app-plugin
+name: dotnet-grpc-plugin
 description: Plugin para habilitar gRPC em seu projeto.
 types:
   - app

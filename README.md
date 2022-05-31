@@ -1,6 +1,6 @@
 
 ## **Visão Geral**
-O plugin **dotnet-gprc-app-plugin** adiciona em uma Stack a capacidade de expor serviços `gRPC` e suas configurações, além de prover a criação de um `gRPC Client` que permite a distribuição e consumo deste serviço em outras aplicações.
+O plugin **dotnet-grpc-plugin** adiciona em uma Stack a capacidade de expor serviços `gRPC` e suas configurações, além de prover a criação de um `gRPC Client` que permite a distribuição e consumo deste serviço em outras aplicações.
 
 ## **Uso**
 
@@ -17,7 +17,7 @@ Também ter instalado:
 Os inputs necessários para utilizar o plugin são:
 | **Campo** | **Valor** | **Descrição** |
 | :--- | :--- | :--- |
-| gPRC Port | ex.: 50051 |  Porta em que será exposta a comunicação gRPC |
+| gRPC Port | ex.: 50051 |  Porta em que será exposta a comunicação gRPC |
 
 #### **Configurações**
 Adicione ao seu `IServiceCollection` via `services.AddGrpcServer();` no arquivo `Startup` ou `Program`, a seguinte configuração:    
@@ -52,7 +52,7 @@ builder.WebHost.ConfigureKestrel((context, options) =>
 
 #### **Implementação**
 
-O plugin **`gprc-app-cs-plugin`** adiciona à sua stack alguns arquivos que auxiliam com um exemplo completo de implementação de um Server e de um Client gRPC.
+O plugin **`dotnet-grpc-plugin`** adiciona à sua stack alguns arquivos que auxiliam com um exemplo completo de implementação de um Server e de um Client gRPC.
 
 #### ***Arquivo Proto***
 

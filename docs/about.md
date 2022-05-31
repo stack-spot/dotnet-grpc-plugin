@@ -1,1 +1,1 @@
-O plugin **dotnet-gprc-app-plugin** adiciona em uma Stack a capacidade de expor serviços `gRPC` e suas configurações, além de prover a criação de um `gRPC Client` que permite a distribuição e consumo deste serviço em outras aplicações.
+O plugin **dotnet-grpc-plugin** adiciona em uma Stack a capacidade de expor serviços `gRPC` e suas configurações, além de prover a criação de um `gRPC Client` que permite a distribuição e consumo deste serviço em outras aplicações.
